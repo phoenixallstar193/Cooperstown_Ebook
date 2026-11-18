@@ -14,6 +14,7 @@
 <meta property="og:title" content="Pin Trader — Cooperstown Pin Trading App">
 <meta property="og:description" content="A free pin trading app for Cooperstown families: snap photos of your pins, keep a want list, and log every trade.">
 <meta property="og:image" content="https://phoenixallstar193.github.io/Cooperstown_Ebook/Pin_Trader/pin-trader-cover.jpg">
+<meta property="og:url" content="https://phoenixallstar193.github.io/Cooperstown_Ebook/Pin_Trader/pin-trader.html">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -82,6 +83,8 @@ label.f{display:block;font-size:12px;font-weight:700;letter-spacing:.06em;text-t
 .trade .top{display:flex;justify-content:space-between;color:var(--muted);font-size:13px;margin-bottom:4px}
 .trade .swap{font-weight:700;overflow-wrap:anywhere}
 .trade .swap i{font-style:normal;color:var(--red);margin:0 6px}
+.trade .tthumb{width:64px;height:64px;border-radius:10px;background:#ece7da;flex:none;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:26px}
+.trade .tthumb img{width:100%;height:100%;object-fit:cover}
 .trade small{display:block;color:var(--muted);margin-top:3px;overflow-wrap:anywhere}
 .empty{text-align:center;color:var(--muted);padding:34px 18px;background:#fff;border:2px dashed var(--line);border-radius:14px}
 .empty .big{font-size:42px}
@@ -425,8 +428,9 @@ function viewTrades(box){
   if(!state.trades.length){ l.innerHTML='<div class="empty"><div class="big">🔄</div><p>No trades yet.<br>Make a swap, then tap <b>+ Log a trade</b>.</p></div>'; return; }
   var sorted=state.trades.slice().sort(function(a,b){ return (b.date||'').localeCompare(a.date||'') || (b.added-a.added); });
   l.innerHTML=sorted.map(function(t){
-    return '<div class="trade" data-id="'+t.id+'"><div class="top"><span>'+esc(fmtDate(t.date))+'</span><span>'+(t.teamPin?'<span class="tag team">Our team pin</span>':'')+'</span></div>'+
-      '<div class="swap">'+esc(t.gave||'?')+'<i>→</i>'+esc(t.got||'?')+'</div>'+(t.with?'<small>With: '+esc(t.with)+'</small>':'')+(t.notes?'<small>'+esc(t.notes)+'</small>':'')+'</div>';
+    var tp=t.photo&&photos[t.photo];
+    return '<div class="trade" data-id="'+t.id+'"><div style="display:flex;gap:12px;align-items:center"><div style="flex:1;min-width:0"><div class="top"><span>'+esc(fmtDate(t.date))+'</span><span>'+(t.teamPin?'<span class="tag team">Our team pin</span>':'')+'</span></div>'+
+      '<div class="swap">'+esc(t.gave||'?')+'<i>→</i>'+esc(t.got||'?')+'</div>'+(t.with?'<small>With: '+esc(t.with)+'</small>':'')+(t.notes?'<small>'+esc(t.notes)+'</small>':'')+'</div>'+(tp?'<div class="tthumb"><img alt="" src="'+tp+'"></div>':'')+'</div></div>';
   }).join('');
   l.querySelectorAll('.trade').forEach(function(c){ c.addEventListener('click',function(){ editTrade(c.dataset.id); }); });
 }
@@ -436,23 +440,25 @@ function editTrade(id){
     title:t?'Edit trade':'Log a trade',
     body:field('Date','date',(t&&t.date)||today(),'','date')+field('Pin I gave','gave',t&&t.gave,'')+field('Pin I got','got',t&&t.got,'')+field('Traded with (team / name)','with',t&&t.with,'')+area('Notes','notes',t&&t.notes,'')+
       '<label class="cbx"><input type="checkbox" name="teamPin"'+(t&&t.teamPin?' checked':'')+'> I gave one of OUR team pins</label>'+
-      (t?'':'<label class="f">Photo of the pin I got (optional)</label>'+photoWidgetHTML()+'<label class="cbx"><input type="checkbox" name="addColl" checked> Add the pin I got to My Pins</label>'),
-    mount:function(s){ if(!t) wp=mountPhoto(s,null); },
+      '<label class="f">Photo of the pin I got (optional)</label>'+photoWidgetHTML()+(t?'':'<label class="cbx"><input type="checkbox" name="addColl" checked> Add the pin I got to My Pins</label>'),
+    mount:function(s){ wp=mountPhoto(s,t&&t.photo); },
     onSave:function(s){
       var gave=val(s,'gave'), got=val(s,'got');
       if(!gave && !got){ toast('Fill in at least one pin'); return false; }
-      var item=t||{id:uid(),added:Date.now()};
+      var item=t||{id:uid(),photo:null,added:Date.now()};
+      var r=wp.value();
+      applyPhoto(item,'photo',r);
       item.date=val(s,'date')||today(); item.gave=gave; item.got=got; item.with=val(s,'with'); item.notes=val(s,'notes'); item.teamPin=s.querySelector('[name=teamPin]').checked;
       if(!t){
         state.trades.unshift(item);
-        var addC=s.querySelector('[name=addColl]'), r=wp&&wp.value();
+        var addC=s.querySelector('[name=addColl]');
         if(addC&&addC.checked&&(got||r)){
           state.pins.unshift({id:uid(),name:got||'Traded pin',team:item.with||'',notes:'Traded on '+fmtDate(item.date)+(gave?' for my '+gave:''),tags:'',fav:false,photo:r?putPhoto(r):null,added:Date.now()});
         }
       }
       save(); render(); toast(t?'Saved':'Trade logged');
     },
-    onDelete:t?function(){ state.trades=state.trades.filter(function(x){return x.id!==t.id;}); save(); }:null
+    onDelete:t?function(){ dropPhoto(t.photo); state.trades=state.trades.filter(function(x){return x.id!==t.id;}); save(); }:null
   });
 }
 
@@ -553,4 +559,3 @@ boot();
 </script>
 </body>
 </html>
-Displaying pin-trader-cover.jpg.
