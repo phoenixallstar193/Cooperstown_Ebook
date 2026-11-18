@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pin Trader — The Road to Cooperstown</title>
+<meta name="description" content="Pin Trader: a free pin trading app for Cooperstown Dreams Park families. Collect your pins, keep a want list, and log every trade.">
+<meta name="theme-color" content="#0d1f3c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Pin Trader">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Pin Trader — Cooperstown Pin Trading App">
+<meta property="og:description" content="A free pin trading app for Cooperstown families: snap photos of your pins, keep a want list, and log every trade.">
+<meta property="og:image" content="https://phoenixallstar193.github.io/pin-trader-cover.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://phoenixallstar193.github.io/pin-trader-cover.jpg">
+<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "67bd8b98069c495f90d61de40edff336"}'></script><!-- End Cloudflare Web Analytics -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="pin-icon-192.png">
+<link rel="icon" href="pin-icon-192.png">
+<style>
+:root{
+  --navy:#0d1f3c; --navy2:#16305a; --red:#c8102e; --gold:#c9a84c; --cream:#f6f3ec;
+  --ink:#1b2433; --muted:#667085; --line:#e3ddd0; --card:#ffffff; --good:#1f7a4d;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.4;overflow-x:clip}
+button,input,textarea{font:inherit;color:inherit}
+.wrap{max-width:720px;margin:0 auto}
+header{background:radial-gradient(circle at 50% 0%,var(--navy2),var(--navy) 70%);color:#fff;padding:calc(14px + env(safe-area-inset-top)) 16px 16px;text-align:center}
+header .eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:700}
+header h1{margin:4px 0 0;font-family:Impact,"Arial Narrow Bold","Oswald",system-ui,sans-serif;font-weight:400;letter-spacing:.04em;font-size:30px;text-transform:uppercase}
+main{padding:14px 14px 170px}
+.banner{background:#fff4d6;border:1px solid #ecd48b;color:#6b5311;border-radius:12px;padding:10px 12px;font-size:14px;margin:0 0 12px;display:flex;gap:10px;align-items:flex-start}
+.banner.warn{background:#fde7e7;border-color:#f0b4b4;color:#7a1f1f}
+.banner button{margin-left:auto;background:none;border:0;font-size:18px;line-height:1;padding:2px 6px;color:inherit;cursor:pointer}
+h2{font-size:18px;margin:18px 0 8px;display:flex;align-items:center;gap:8px}
+h2::after{content:"";flex:1;height:2px;background:var(--red);opacity:.6}
+.sub{color:var(--muted);font-size:14px;margin:0 0 10px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:0 16px;border-radius:12px;border:0;background:var(--navy);color:#fff;font-weight:600;cursor:pointer}
+.btn.red{background:var(--red)}
+.btn.ghost{background:#fff;color:var(--navy);border:1.5px solid var(--navy)}
+.btn.danger{background:#fff;color:var(--red);border:1.5px solid var(--red)}
+.btn.sm{min-height:38px;padding:0 12px;font-size:14px}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+input[type=text],input[type=search],input[type=date],input[type=number],textarea{width:100%;font-size:16px;padding:11px 12px;border:1.5px solid var(--line);border-radius:12px;background:#fff;min-height:44px}
+textarea{min-height:76px;resize:vertical}
+input:focus,textarea:focus{outline:2px solid var(--gold);border-color:var(--gold)}
+label.f{display:block;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--navy);margin:12px 0 5px}
+.chips{display:flex;gap:8px;margin:10px 0}
+.chip{border:1.5px solid var(--navy);background:#fff;color:var(--navy);border-radius:999px;padding:7px 14px;font-weight:600;font-size:14px;min-height:38px;cursor:pointer}
+.chip.on{background:var(--navy);color:#fff}
+.count{color:var(--muted);font-size:14px;margin:4px 2px 10px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media(min-width:560px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.pcard{background:var(--card);border-radius:14px;overflow:hidden;border:1px solid var(--line);position:relative;cursor:pointer;box-shadow:0 1px 3px rgba(13,31,60,.08)}
+.pimg{aspect-ratio:1/1;background:#ece7da;display:flex;align-items:center;justify-content:center;font-size:44px}
+.pimg img{width:100%;height:100%;object-fit:cover;display:block}
+.pinfo{padding:8px 10px 10px}
+.pinfo b{display:block;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pinfo span{display:block;font-size:13px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.star{position:absolute;top:6px;right:6px;width:40px;height:40px;border-radius:50%;border:0;background:rgba(255,255,255,.92);font-size:22px;line-height:1;color:var(--gold);cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.star.off{color:#9aa3b2}
+.list{display:flex;flex-direction:column;gap:10px}
+.item{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;gap:12px;align-items:center;cursor:pointer}
+.item .thumb{width:56px;height:56px;border-radius:10px;background:#ece7da;flex:none;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:26px}
+.item .thumb img{width:100%;height:100%;object-fit:cover}
+.item .txt{flex:1;min-width:0}
+.item .txt b{display:block;overflow-wrap:anywhere}
+.item .txt small{display:block;color:var(--muted);font-size:13px;overflow-wrap:anywhere}
+.item.done .txt b{text-decoration:line-through;color:var(--muted)}
+.chk{width:30px;height:30px;border-radius:8px;border:2px solid var(--navy);background:#fff;flex:none;font-size:20px;line-height:1;color:#fff;cursor:pointer;padding:0}
+.chk.on{background:var(--good);border-color:var(--good)}
+.tag{display:inline-block;background:#e8eefb;color:var(--navy);border-radius:999px;font-size:12px;font-weight:700;padding:2px 9px;margin-top:4px}
+.tag.team{background:#fde7ea;color:var(--red)}
+.trade{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;cursor:pointer}
+.trade .top{display:flex;justify-content:space-between;color:var(--muted);font-size:13px;margin-bottom:4px}
+.trade .swap{font-weight:700;overflow-wrap:anywhere}
+.trade .swap i{font-style:normal;color:var(--red);margin:0 6px}
+.trade small{display:block;color:var(--muted);margin-top:3px;overflow-wrap:anywhere}
+.empty{text-align:center;color:var(--muted);padding:34px 18px;background:#fff;border:2px dashed var(--line);border-radius:14px}
+.empty .big{font-size:42px}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px}
+.stat b{display:block;font-size:28px;color:var(--navy);line-height:1.1}
+.stat span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-weight:700}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:4px 14px 14px}
+.fine{font-size:12.5px;color:var(--muted);margin:18px 2px 0}
+.tabs{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom);z-index:20}
+.tabs button{flex:1;border:0;background:none;padding:8px 2px 7px;min-height:58px;color:var(--muted);font-size:12px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer}
+.tabs button span.ic{font-size:22px;line-height:1}
+.tabs button.on{color:var(--red)}
+.fab{position:fixed;right:16px;bottom:calc(74px + env(safe-area-inset-bottom));z-index:19;min-height:52px;padding:0 20px;border-radius:999px;border:0;background:var(--red);color:#fff;font-weight:700;font-size:16px;box-shadow:0 4px 14px rgba(200,16,46,.45);cursor:pointer}
+.overlay{position:fixed;inset:0;background:rgba(10,18,35,.55);z-index:50;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--cream);width:100%;max-width:640px;max-height:92vh;overflow:auto;border-radius:20px 20px 0 0;padding:16px 16px calc(18px + env(safe-area-inset-bottom));-webkit-overflow-scrolling:touch}
+.sheet h3{margin:0 0 4px;font-size:20px}
+.sheet .btns{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+.sheet .btns .btn{flex:1}
+.cbx{display:flex;gap:10px;align-items:center;margin:12px 0 0;font-size:15px}
+.cbx input{width:22px;height:22px;flex:none;accent-color:var(--red)}
+.phwrap{background:#fff;border:1.5px dashed var(--line);border-radius:14px;padding:10px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.ph-prev{width:84px;height:84px;border-radius:12px;background:#ece7da;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:32px;flex:none}
+.ph-prev img{width:100%;height:100%;object-fit:cover}
+.ph-btns{display:flex;gap:8px;flex-wrap:wrap}
+.toast{position:fixed;left:50%;bottom:calc(140px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 16px;border-radius:999px;font-size:14px;z-index:80;box-shadow:0 4px 14px rgba(0,0,0,.3);max-width:90vw;text-align:center}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">The Road to Cooperstown · Dreams Park | Facebook Group</div>
+  <h1>Pin Trader</h1>
+</header>
+<div class="wrap">
+  <main id="main"></main>
+</div>
+<button class="fab" id="fab" type="button"></button>
+<nav class="tabs" id="tabs">
+  <button type="button" data-tab="collection"><span class="ic">📌</span>My Pins</button>
+  <button type="button" data-tab="wants"><span class="ic">🎯</span>Want List</button>
+  <button type="button" data-tab="trades"><span class="ic">🔄</span>Trades</button>
+  <button type="button" data-tab="me"><span class="ic">⭐</span>My Week</button>
+</nav>
+<div id="modal"></div>
+<div id="toastbox"></div>
+
+<script>
+(function(){
+'use strict';
+
+/* ---------- helpers ---------- */
+var $ = function(s, r){ return (r||document).querySelector(s); };
+var esc = function(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); };
+var uid = function(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); };
+function today(){ var d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function fmtDate(s){ if(!s) return ''; var p=s.split('-').map(Number); if(p.length<3||isNaN(p[0])) return s; return new Date(p[0],p[1]-1,p[2]).toLocaleDateString(undefined,{month:'short',day:'numeric'}); }
+function toast(msg){
+  var box=$('#toastbox'); box.innerHTML='<div class="toast">'+esc(msg)+'</div>';
+  clearTimeout(toast.t); toast.t=setTimeout(function(){ box.innerHTML=''; },2400);
+}
+
+/* ---------- state + storage ---------- */
+function blankState(){
+  return { profile:{player:'',team:'',week:'',brought:'',teamPinDesc:'',teamPinPhoto:null},
+           pins:[], wants:[], trades:[],
+           wrap:{favTrade:'',hardest:'',stillHunting:'',story:''} };
+}
+var state = blankState();
+var photos = {};          // id -> data URL
+var idb = null, storageOK = true;
+var ui = { tab:'collection', q:'', favOnly:false };
+
+function openDB(){
+  return new Promise(function(res,rej){
+    try{
+      var r=indexedDB.open('pin-tracker',1);
+      r.onupgradeneeded=function(){ var d=r.result; d.createObjectStore('kv'); d.createObjectStore('photos'); };
+      r.onsuccess=function(){ res(r.result); };
+      r.onerror=function(){ rej(r.error); };
+    }catch(e){ rej(e); }
+  });
+}
+function idbGet(store,key){ return new Promise(function(res,rej){ var q=idb.transaction(store).objectStore(store).get(key); q.onsuccess=function(){res(q.result);}; q.onerror=function(){rej(q.error);}; }); }
+function idbPut(store,key,val){ return new Promise(function(res,rej){ var t=idb.transaction(store,'readwrite'); t.objectStore(store).put(val,key); t.oncomplete=function(){res();}; t.onerror=function(){rej(t.error);}; t.onabort=function(){rej(t.error);}; }); }
+function idbDel(store,key){ return new Promise(function(res,rej){ var t=idb.transaction(store,'readwrite'); t.objectStore(store).delete(key); t.oncomplete=function(){res();}; t.onerror=function(){rej(t.error);}; }); }
+function idbClear(store){ return new Promise(function(res,rej){ var t=idb.transaction(store,'readwrite'); t.objectStore(store).clear(); t.oncomplete=function(){res();}; t.onerror=function(){rej(t.error);}; }); }
+function idbAllPhotos(){ return new Promise(function(res,rej){ var out={}; var q=idb.transaction('photos').objectStore('photos').openCursor(); q.onsuccess=function(){ var c=q.result; if(c){ out[c.key]=c.value; c.continue(); } else res(out); }; q.onerror=function(){rej(q.error);}; }); }
+
+var saveTimer=null;
+function save(now){
+  clearTimeout(saveTimer);
+  var go=function(){ if(!idb) return; idbPut('kv','state',state).catch(function(){ storageOK=false; }); };
+  if(now) go(); else saveTimer=setTimeout(go,300);
+}
+document.addEventListener('visibilitychange',function(){ if(document.visibilityState==='hidden') save(true); });
+window.addEventListener('pagehide',function(){ save(true); });
+
+function putPhoto(dataUrl){
+  var id=uid(); photos[id]=dataUrl;
+  if(idb) idbPut('photos',id,dataUrl).catch(function(){ storageOK=false; });
+  return id;
+}
+function dropPhoto(id){
+  if(!id) return; delete photos[id];
+  if(idb) idbDel('photos',id).catch(function(){});
+}
+
+function compress(file){
+  return new Promise(function(res,rej){
+    var url=URL.createObjectURL(file), img=new Image();
+    img.onload=function(){
+      var s=Math.min(1,720/Math.max(img.width,img.height));
+      var c=document.createElement('canvas'); c.width=Math.max(1,Math.round(img.width*s)); c.height=Math.max(1,Math.round(img.height*s));
+      c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+      URL.revokeObjectURL(url); res(c.toDataURL('image/jpeg',0.72));
+    };
+    img.onerror=function(){ URL.revokeObjectURL(url); rej(new Error('Could not read that photo')); };
+    img.src=url;
+  });
+}
+
+/* ---------- photo picker widget ---------- */
+function photoWidgetHTML(){
+  return '<div class="phwrap"><div class="ph-prev"></div><div class="ph-btns">'+
+    '<label class="btn sm">📷 Take photo<input type="file" accept="image/*" capture="environment" hidden data-ph="cam"></label>'+
+    '<label class="btn sm ghost">🖼️ Choose<input type="file" accept="image/*" hidden data-ph="pick"></label>'+
+    '<button type="button" class="btn sm danger" data-ph="rm">Remove</button></div></div>';
+}
+/* root: element containing the widget. initialId: current photo id. onChange optional.
+   returns {value()} -> undefined (unchanged), null (removed) or data URL (new) */
+function mountPhoto(root, initialId, onChange){
+  var change; // undefined=unchanged
+  var prev=$('.ph-prev',root), rm=$('[data-ph=rm]',root);
+  function show(){
+    var src = change===undefined ? (initialId?photos[initialId]:null) : change;
+    prev.innerHTML = src ? '<img alt="" src="'+src+'">' : '📌';
+    rm.classList.toggle('hidden', !src);
+  }
+  function handle(e){
+    var f=e.target.files && e.target.files[0]; e.target.value='';
+    if(!f) return;
+    compress(f).then(function(d){ change=d; show(); if(onChange) onChange(d); })
+      .catch(function(err){ toast(err.message||'Photo failed'); });
+  }
+  root.querySelectorAll('input[type=file][data-ph]').forEach(function(i){ i.addEventListener('change',handle); });
+  rm.addEventListener('click',function(){ change=null; show(); if(onChange) onChange(null); });
+  show();
+  return { value:function(){ return change; } };
+}
+/* apply a widget result to an item's photo field */
+function applyPhoto(item, key, result){
+  if(result===undefined) return;
+  if(item[key]) dropPhoto(item[key]);
+  item[key] = result ? putPhoto(result) : null;
+}
+
+/* ---------- modal sheets ---------- */
+function closeSheet(){ $('#modal').innerHTML=''; document.body.style.overflow=''; }
+function openSheet(opts){
+  var m=$('#modal');
+  m.innerHTML='<div class="overlay"><div class="sheet" role="dialog" aria-modal="true"><h3>'+esc(opts.title)+'</h3>'+(opts.intro?'<p class="sub">'+esc(opts.intro)+'</p>':'')+
+    opts.body+'<div class="btns">'+
+    (opts.onSave?'<button type="button" class="btn red" data-act="save">'+esc(opts.saveLabel||'Save')+'</button>':'')+
+    '<button type="button" class="btn ghost" data-act="cancel">'+(opts.onSave?'Cancel':'Close')+'</button>'+
+    (opts.onDelete?'<button type="button" class="btn danger" data-act="del">Delete</button>':'')+
+    '</div></div></div>';
+  document.body.style.overflow='hidden';
+  var sheet=$('.sheet',m);
+  m.firstChild.addEventListener('click',function(e){ if(e.target===m.firstChild) closeSheet(); });
+  $('[data-act=cancel]',sheet).addEventListener('click',closeSheet);
+  if(opts.onSave) $('[data-act=save]',sheet).addEventListener('click',function(){ if(opts.onSave(sheet)!==false) closeSheet(); });
+  if(opts.onDelete) $('[data-act=del]',sheet).addEventListener('click',function(){
+    confirmSheet('Delete this? This can\'t be undone.','Delete',function(){ opts.onDelete(); closeSheet(); render(); });
+  });
+  if(opts.mount) opts.mount(sheet);
+  return sheet;
+}
+function confirmSheet(msg,okLabel,onOk){
+  var m=document.createElement('div');
+  m.innerHTML='<div class="overlay" style="z-index:70"><div class="sheet"><h3>Are you sure?</h3><p class="sub">'+esc(msg)+'</p><div class="btns"><button type="button" class="btn red" data-y>'+esc(okLabel||'OK')+'</button><button type="button" class="btn ghost" data-n>Cancel</button></div></div></div>';
+  document.body.appendChild(m);
+  var done=function(){ m.remove(); };
+  $('[data-n]',m).addEventListener('click',done);
+  m.firstChild.addEventListener('click',function(e){ if(e.target===m.firstChild) done(); });
+  $('[data-y]',m).addEventListener('click',function(){ done(); onOk(); });
+}
+function val(sheet,name){ var el=sheet.querySelector('[name='+name+']'); return el ? el.value.trim() : ''; }
+function field(label,name,value,ph,type){
+  return '<label class="f">'+esc(label)+'</label><input type="'+(type||'text')+'" name="'+name+'" value="'+esc(value||'')+'" placeholder="'+esc(ph||'')+'" autocomplete="off">';
+}
+function area(label,name,value,ph){
+  return '<label class="f">'+esc(label)+'</label><textarea name="'+name+'" placeholder="'+esc(ph||'')+'">'+esc(value||'')+'</textarea>';
+}
+
+/* ---------- views ---------- */
+function setTab(t){ ui.tab=t; render(); window.scrollTo(0,0); }
+document.querySelectorAll('#tabs button').forEach(function(b){ b.addEventListener('click',function(){ setTab(b.dataset.tab); }); });
+
+function banners(){
+  var h='';
+  if(!storageOK) h+='<div class="banner warn"><span>⚠️ Saving is turned off in this browser (private mode?). Your pins will be lost when you close the page.</span></div>';
+  var standalone=(window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches)||window.navigator.standalone;
+  var dismissed=false; try{ dismissed=localStorage.getItem('pt-hint')==='1'; }catch(e){}
+  if(!standalone && !dismissed) h+='<div class="banner" id="hint"><span>📲 <b>Install it:</b> in your browser menu, choose <b>Add to Home Screen</b> (on iPhone: Share ▸ Add to Home Screen). It then opens like an app and works with no signal.</span><button type="button" aria-label="Dismiss">✕</button></div>';
+  return h;
+}
+
+function render(){
+  var main=$('#main'), fab=$('#fab');
+  document.querySelectorAll('#tabs button').forEach(function(b){ b.classList.toggle('on',b.dataset.tab===ui.tab); });
+  main.innerHTML=banners();
+  var hint=$('#hint',main);
+  if(hint) $('button',hint).addEventListener('click',function(){ try{localStorage.setItem('pt-hint','1');}catch(e){} hint.remove(); });
+  var labels={collection:'+ Add pin',wants:'+ Add to want list',trades:'+ Log a trade'};
+  if(labels[ui.tab]){ fab.textContent=labels[ui.tab]; fab.classList.remove('hidden'); } else fab.classList.add('hidden');
+  var box=document.createElement('div'); main.appendChild(box);
+  if(ui.tab==='collection') viewCollection(box);
+  else if(ui.tab==='wants') viewWants(box);
+  else if(ui.tab==='trades') viewTrades(box);
+  else viewMe(box);
+}
+$('#fab').addEventListener('click',function(){
+  if(ui.tab==='collection') editPin(null);
+  else if(ui.tab==='wants') editWant(null);
+  else if(ui.tab==='trades') editTrade(null);
+});
+
+/* --- My Pins --- */
+function viewCollection(box){
+  box.innerHTML='<h2>My pin collection</h2><p class="sub">Snap a photo of each pin you collect. Tap ★ to mark your favorites.</p>'+
+    '<input type="search" id="q" placeholder="Search pins, teams, notes…" value="'+esc(ui.q)+'">'+
+    '<div class="chips"><button type="button" class="chip" data-f="all">All</button><button type="button" class="chip" data-f="fav">★ Favorites</button></div>'+
+    '<div class="count" id="cnt"></div><div id="grid"></div>'+
+    '<p class="fine">Informational only. Not affiliated with or endorsed by Cooperstown Dreams Park.</p>';
+  var q=$('#q',box);
+  q.addEventListener('input',function(){ ui.q=q.value; grid(); });
+  box.querySelectorAll('.chip').forEach(function(c){ c.addEventListener('click',function(){ ui.favOnly=c.dataset.f==='fav'; grid(); }); });
+  function grid(){
+    box.querySelectorAll('.chip').forEach(function(c){ c.classList.toggle('on',(c.dataset.f==='fav')===ui.favOnly); });
+    var term=ui.q.toLowerCase();
+    var list=state.pins.filter(function(p){
+      if(ui.favOnly && !p.fav) return false;
+      if(!term) return true;
+      return (p.name+' '+p.team+' '+p.notes+' '+p.tags).toLowerCase().indexOf(term)>-1;
+    });
+    var favs=state.pins.filter(function(p){return p.fav;}).length;
+    $('#cnt',box).textContent=state.pins.length+' pin'+(state.pins.length===1?'':'s')+' · '+favs+' favorite'+(favs===1?'':'s')+((term||ui.favOnly)?' · showing '+list.length:'');
+    var g=$('#grid',box);
+    if(!list.length){
+      g.innerHTML='<div class="empty"><div class="big">📌</div><p>'+(state.pins.length?'No pins match.':'No pins yet.<br>Tap <b>+ Add pin</b> to start your digital pin book.')+'</p></div>'; return;
+    }
+    g.className='grid';
+    g.innerHTML=list.map(function(p){
+      var ph=p.photo&&photos[p.photo];
+      return '<div class="pcard" data-id="'+p.id+'"><div class="pimg">'+(ph?'<img alt="" src="'+ph+'">':'📌')+'</div>'+
+        '<div class="pinfo"><b>'+esc(p.name||'Untitled pin')+'</b><span>'+esc(p.team||' ')+'</span></div>'+
+        '<button type="button" class="star'+(p.fav?'':' off')+'" aria-label="Favorite" data-star="'+p.id+'">'+(p.fav?'★':'☆')+'</button></div>';
+    }).join('');
+    g.querySelectorAll('.pcard').forEach(function(c){ c.addEventListener('click',function(){ editPin(c.dataset.id); }); });
+    g.querySelectorAll('[data-star]').forEach(function(s){ s.addEventListener('click',function(e){
+      e.stopPropagation(); var p=state.pins.find(function(x){return x.id===s.dataset.star;}); if(p){ p.fav=!p.fav; save(); grid(); }
+    }); });
+  }
+  grid();
+}
+function editPin(id){
+  var p=id?state.pins.find(function(x){return x.id===id;}):null;
+  var wp;
+  openSheet({
+    title:p?'Edit pin':'Add a pin',
+    body:photoWidgetHTML()+field('Pin / team name','name',p&&p.name,'e.g. Texas Bombers')+field('Team or state','team',p&&p.team,'Where is it from?')+
+      area('Notes','notes',p&&p.notes,'Who you traded with, what makes it special…')+field('Tags','tags',p&&p.tags,'limited edition, keeper, spinner…')+
+      '<label class="cbx"><input type="checkbox" name="fav"'+(p&&p.fav?' checked':'')+'> ★ Favorite</label>',
+    mount:function(s){ wp=mountPhoto(s,p&&p.photo); },
+    onSave:function(s){
+      var name=val(s,'name'), r=wp.value();
+      if(!name && !(r || (r===undefined && p && p.photo))){ toast('Add a name or a photo first'); return false; }
+      var item=p||{id:uid(),photo:null,added:Date.now()};
+      item.name=name||'Untitled pin'; item.team=val(s,'team'); item.notes=val(s,'notes'); item.tags=val(s,'tags');
+      item.fav=s.querySelector('[name=fav]').checked;
+      applyPhoto(item,'photo',r);
+      if(!p) state.pins.unshift(item);
+      save(); render(); toast(p?'Saved':'Pin added');
+    },
+    onDelete:p?function(){ dropPhoto(p.photo); state.pins=state.pins.filter(function(x){return x.id!==p.id;}); save(); }:null
+  });
+}
+
+/* --- Want list --- */
+function viewWants(box){
+  box.innerHTML='<h2>My want list</h2><p class="sub">Pins you are hunting for. Write them down before the week gets busy, and check the box when you land one.</p><div id="wl" class="list"></div>';
+  var l=$('#wl',box);
+  if(!state.wants.length){
+    l.innerHTML='<div class="empty"><div class="big">🎯</div><p>Nothing here yet.<br>Spot a pin you want? Tap <b>+ Add to want list</b> and snap a photo.</p></div>'; return;
+  }
+  var sorted=state.wants.slice().sort(function(a,b){ return (a.got?1:0)-(b.got?1:0); });
+  l.innerHTML=sorted.map(function(w){
+    var ph=w.photo&&photos[w.photo];
+    return '<div class="item'+(w.got?' done':'')+'" data-id="'+w.id+'"><button type="button" class="chk'+(w.got?' on':'')+'" data-got="'+w.id+'" aria-label="Got it">'+(w.got?'✓':'')+'</button>'+
+      '<div class="txt"><b>'+esc(w.name||'Untitled')+'</b>'+(w.why?'<small>Why: '+esc(w.why)+'</small>':'')+(w.where?'<small>Find it: '+esc(w.where)+'</small>':'')+
+      (w.got&&!w.inColl?'<button type="button" class="btn sm ghost" data-add="'+w.id+'" style="margin-top:6px">+ Add to my pins</button>':'')+(w.got&&w.inColl?'<span class="tag">In my pins</span>':'')+'</div>'+
+      '<div class="thumb">'+(ph?'<img alt="" src="'+ph+'">':'🎯')+'</div></div>';
+  }).join('');
+  l.querySelectorAll('.item').forEach(function(it){ it.addEventListener('click',function(){ editWant(it.dataset.id); }); });
+  l.querySelectorAll('[data-got]').forEach(function(b){ b.addEventListener('click',function(e){
+    e.stopPropagation(); var w=state.wants.find(function(x){return x.id===b.dataset.got;}); if(w){ w.got=!w.got; save(); render(); if(w.got) toast('Got it! 🎉'); }
+  }); });
+  l.querySelectorAll('[data-add]').forEach(function(b){ b.addEventListener('click',function(e){
+    e.stopPropagation(); var w=state.wants.find(function(x){return x.id===b.dataset.add;}); if(!w) return;
+    var pid=w.photo&&photos[w.photo]?putPhoto(photos[w.photo]):null;
+    state.pins.unshift({id:uid(),name:w.name,team:'',notes:w.why?('Wanted because: '+w.why):'',tags:'',fav:false,photo:pid,added:Date.now()});
+    w.inColl=true; save(); render(); toast('Added to My Pins');
+  }); });
+}
+function editWant(id){
+  var w=id?state.wants.find(function(x){return x.id===id;}):null, wp;
+  openSheet({
+    title:w?'Edit want':'Add to want list',
+    body:photoWidgetHTML()+field('Pin / team I want','name',w&&w.name,'e.g. Alaska Aces glitter pin')+field('Why I want it','why',w&&w.why,'')+field('Where I might find it','where',w&&w.where,'Field, team, trader…')+
+      '<label class="cbx"><input type="checkbox" name="got"'+(w&&w.got?' checked':'')+'> Got it!</label>',
+    mount:function(s){ wp=mountPhoto(s,w&&w.photo); },
+    onSave:function(s){
+      var name=val(s,'name'), r=wp.value();
+      if(!name && !(r || (r===undefined && w && w.photo))){ toast('Add a name or a photo first'); return false; }
+      var item=w||{id:uid(),photo:null,inColl:false,added:Date.now()};
+      item.name=name||'Untitled'; item.why=val(s,'why'); item.where=val(s,'where'); item.got=s.querySelector('[name=got]').checked;
+      applyPhoto(item,'photo',r);
+      if(!w) state.wants.unshift(item);
+      save(); render(); toast(w?'Saved':'Added to want list');
+    },
+    onDelete:w?function(){ dropPhoto(w.photo); state.wants=state.wants.filter(function(x){return x.id!==w.id;}); save(); }:null
+  });
+}
+
+/* --- Trades --- */
+function viewTrades(box){
+  box.innerHTML='<h2>Trades log</h2><p class="sub">One entry per trade, as it happens. By closing day this is the record of who you met and what you swapped.</p>'+
+    '<div class="banner"><span>💡 <b>Trading tip:</b> keep your own team\'s pins in a separate pouch from the pins you\'ve collected, so a keeper never gets traded by mistake. Always ask before reaching for someone else\'s pin book or bag.</span></div><div id="tl" class="list"></div>';
+  var l=$('#tl',box);
+  if(!state.trades.length){ l.innerHTML='<div class="empty"><div class="big">🔄</div><p>No trades yet.<br>Make a swap, then tap <b>+ Log a trade</b>.</p></div>'; return; }
+  var sorted=state.trades.slice().sort(function(a,b){ return (b.date||'').localeCompare(a.date||'') || (b.added-a.added); });
+  l.innerHTML=sorted.map(function(t){
+    return '<div class="trade" data-id="'+t.id+'"><div class="top"><span>'+esc(fmtDate(t.date))+'</span><span>'+(t.teamPin?'<span class="tag team">Our team pin</span>':'')+'</span></div>'+
+      '<div class="swap">'+esc(t.gave||'?')+'<i>→</i>'+esc(t.got||'?')+'</div>'+(t.with?'<small>With: '+esc(t.with)+'</small>':'')+(t.notes?'<small>'+esc(t.notes)+'</small>':'')+'</div>';
+  }).join('');
+  l.querySelectorAll('.trade').forEach(function(c){ c.addEventListener('click',function(){ editTrade(c.dataset.id); }); });
+}
+function editTrade(id){
+  var t=id?state.trades.find(function(x){return x.id===id;}):null, wp;
+  openSheet({
+    title:t?'Edit trade':'Log a trade',
+    body:field('Date','date',(t&&t.date)||today(),'','date')+field('Pin I gave','gave',t&&t.gave,'')+field('Pin I got','got',t&&t.got,'')+field('Traded with (team / name)','with',t&&t.with,'')+area('Notes','notes',t&&t.notes,'')+
+      '<label class="cbx"><input type="checkbox" name="teamPin"'+(t&&t.teamPin?' checked':'')+'> I gave one of OUR team pins</label>'+
+      (t?'':'<label class="f">Photo of the pin I got (optional)</label>'+photoWidgetHTML()+'<label class="cbx"><input type="checkbox" name="addColl" checked> Add the pin I got to My Pins</label>'),
+    mount:function(s){ if(!t) wp=mountPhoto(s,null); },
+    onSave:function(s){
+      var gave=val(s,'gave'), got=val(s,'got');
+      if(!gave && !got){ toast('Fill in at least one pin'); return false; }
+      var item=t||{id:uid(),added:Date.now()};
+      item.date=val(s,'date')||today(); item.gave=gave; item.got=got; item.with=val(s,'with'); item.notes=val(s,'notes'); item.teamPin=s.querySelector('[name=teamPin]').checked;
+      if(!t){
+        state.trades.unshift(item);
+        var addC=s.querySelector('[name=addColl]'), r=wp&&wp.value();
+        if(addC&&addC.checked&&(got||r)){
+          state.pins.unshift({id:uid(),name:got||'Traded pin',team:item.with||'',notes:'Traded on '+fmtDate(item.date)+(gave?' for my '+gave:''),tags:'',fav:false,photo:r?putPhoto(r):null,added:Date.now()});
+        }
+      }
+      save(); render(); toast(t?'Saved':'Trade logged');
+    },
+    onDelete:t?function(){ state.trades=state.trades.filter(function(x){return x.id!==t.id;}); save(); }:null
+  });
+}
+
+/* --- My Week --- */
+function summaryText(){
+  var p=state.profile, w=state.wrap, teamTraded=state.trades.filter(function(t){return t.teamPin;}).length;
+  var L=['🏆 My Cooperstown pin trading wrap-up'];
+  var who=[p.player&&('Player: '+p.player),p.team&&('Team: '+p.team),p.week&&('Week: '+p.week)].filter(Boolean).join(' • ');
+  if(who) L.push(who);
+  L.push('Pins collected: '+state.pins.length+' • Team pins traded away: '+teamTraded+' • Trades logged: '+state.trades.length);
+  if(w.favTrade) L.push('Favorite trade: '+w.favTrade);
+  if(w.hardest) L.push('Hardest pin to get: '+w.hardest);
+  if(w.stillHunting) L.push('Still hunting: '+w.stillHunting);
+  if(w.story) L.push('Best pin story: '+w.story);
+  L.push('(Made with Pin Trader from The Road to Cooperstown – Dreams Park)');
+  return L.join('\n');
+}
+function viewMe(box){
+  var p=state.profile, w=state.wrap, teamTraded=state.trades.filter(function(t){return t.teamPin;}).length;
+  var favs=state.pins.filter(function(x){return x.fav;}).length;
+  box.innerHTML='<h2>My info</h2><div class="card">'+
+    field('Player name','player',p.player,'')+field('Team name','team',p.team,'')+field('Week attending','week',p.week,'e.g. Week 7, July 2–8')+field('Number of our pins we brought','brought',p.brought,'','number')+'</div>'+
+    '<h2>Our team pin</h2><p class="sub">Add a photo or describe your team\'s pin. It helps when someone asks what you are trading.</p><div class="card">'+
+    '<label class="f">Photo</label>'+photoWidgetHTML()+area('Describe it','teamPinDesc',p.teamPinDesc,'Colors, shape, anything that makes it yours')+'</div>'+
+    '<h2>End-of-week wrap-up</h2><div class="stats">'+
+    '<div class="stat"><b>'+state.pins.length+'</b><span>Pins collected</span></div><div class="stat"><b>'+teamTraded+'</b><span>Team pins traded away</span></div>'+
+    '<div class="stat"><b>'+state.trades.length+'</b><span>Trades logged</span></div><div class="stat"><b>'+favs+'</b><span>Favorites</span></div></div>'+
+    '<div class="card" style="margin-top:12px">'+area('My favorite trade of the week','favTrade',w.favTrade,'')+area('Hardest pin to get','hardest',w.hardest,'')+area('The one pin I am still hunting','stillHunting',w.stillHunting,'')+area('Best pin story of the week','story',w.story,'')+'</div>'+
+    '<div class="row" style="margin-top:12px"><button type="button" class="btn red" id="copy">📋 Copy my summary</button></div>'+
+    '<p class="sub" style="margin-top:6px">Paste it into the group\'s Trading Pin Reveals post. Your week helps next year\'s families know what to expect.</p>'+
+    '<h2>Backup</h2><p class="sub">Your pins and photos are saved on this phone only. Save a backup file now and then, especially before changing phones.</p>'+
+    '<div class="row"><button type="button" class="btn ghost" id="exp">⬇️ Save backup</button><label class="btn ghost">⬆️ Restore backup<input type="file" accept="application/json,.json" hidden id="imp"></label><button type="button" class="btn danger" id="wipe">Erase everything</button></div>'+
+    '<p class="fine">From The Road to Cooperstown – Dreams Park, a Facebook group for families planning a Cooperstown Dreams Park trip. This tool is informational only and is not affiliated with or endorsed by Cooperstown Dreams Park. Confirm current park details with the park or your coach.</p>';
+
+  ['player','team','week','brought'].forEach(function(k){ var el=box.querySelector('[name='+k+']'); el.addEventListener('input',function(){ state.profile[k]=el.value; save(); }); });
+  var td=box.querySelector('[name=teamPinDesc]'); td.addEventListener('input',function(){ state.profile.teamPinDesc=td.value; save(); });
+  ['favTrade','hardest','stillHunting','story'].forEach(function(k){ var el=box.querySelector('[name='+k+']'); el.addEventListener('input',function(){ state.wrap[k]=el.value; save(); }); });
+  mountPhoto(box,p.teamPinPhoto,function(r){ applyPhoto(state.profile,'teamPinPhoto',r); save(); });
+
+  $('#copy',box).addEventListener('click',function(){
+    var txt=summaryText();
+    function fallback(){ var ta=document.createElement('textarea'); ta.value=txt; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); try{ document.execCommand('copy'); toast('Summary copied'); }catch(e){ toast('Could not copy'); } ta.remove(); }
+    if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(function(){ toast('Summary copied'); }).catch(fallback); else fallback();
+  });
+  $('#exp',box).addEventListener('click',function(){
+    var data=JSON.stringify({app:'pin-tracker',version:1,exported:new Date().toISOString(),state:state,photos:photos});
+    var blob=new Blob([data],{type:'application/json'}), a=document.createElement('a');
+    a.href=URL.createObjectURL(blob); a.download='pin-tracker-backup-'+today()+'.json'; document.body.appendChild(a); a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },1500); toast('Backup saved');
+  });
+  $('#imp',box).addEventListener('change',function(e){
+    var f=e.target.files&&e.target.files[0]; e.target.value=''; if(!f) return;
+    var r=new FileReader();
+    r.onload=function(){
+      var d; try{ d=JSON.parse(r.result); }catch(err){ toast('That is not a backup file'); return; }
+      if(!d||d.app!=='pin-tracker'||!d.state||!Array.isArray(d.state.pins)){ toast('That is not a pin tracker backup'); return; }
+      confirmSheet('Replace everything on this phone with the backup ('+d.state.pins.length+' pins)?','Restore',function(){ restore(d); });
+    };
+    r.readAsText(f);
+  });
+  $('#wipe',box).addEventListener('click',function(){
+    confirmSheet('This erases all pins, wants, trades and photos on this phone. Save a backup first if you want to keep them.','Erase everything',function(){ restore({state:blankState(),photos:{}}); toast('Erased'); });
+  });
+}
+function restore(d){
+  var s=blankState();
+  s.profile=Object.assign(s.profile,d.state.profile||{});
+  s.pins=d.state.pins||[]; s.wants=d.state.wants||[]; s.trades=d.state.trades||[]; s.wrap=Object.assign(s.wrap,d.state.wrap||{});
+  state=s; photos=d.photos||{};
+  var done=function(){ save(true); render(); };
+  if(!idb){ done(); return; }
+  idbClear('photos').then(function(){
+    var ids=Object.keys(photos);
+    return Promise.all(ids.map(function(id){ return idbPut('photos',id,photos[id]); }));
+  }).then(function(){ done(); toast('Backup restored'); }).catch(function(){ storageOK=false; done(); });
+}
+
+/* ---------- boot ---------- */
+function boot(){
+  render();
+  openDB().then(function(d){
+    idb=d;
+    return Promise.all([idbGet('kv','state'),idbAllPhotos()]);
+  }).then(function(r){
+    if(r[0]&&r[0].pins){
+      state=Object.assign(blankState(),r[0]);
+      state.profile=Object.assign(blankState().profile,r[0].profile||{});
+      state.wrap=Object.assign(blankState().wrap,r[0].wrap||{});
+    }
+    photos=r[1]||{};
+    try{ if(navigator.storage&&navigator.storage.persist) navigator.storage.persist(); }catch(e){}
+    render();
+  }).catch(function(){ storageOK=false; render(); });
+  try{ if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostname==='localhost')) navigator.serviceWorker.register('sw.js').catch(function(){}); }catch(e){}
+}
+boot();
+})();
+</script>
+</body>
+</html>
