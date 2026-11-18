@@ -552,7 +552,11 @@ function boot(){
     try{ if(navigator.storage&&navigator.storage.persist) navigator.storage.persist(); }catch(e){}
     render();
   }).catch(function(){ storageOK=false; render(); });
-  try{ if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostname==='localhost')) navigator.serviceWorker.register('sw.js').catch(function(){}); }catch(e){}
+  try{ if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostname==='localhost')) (function(){
+    var had=!!navigator.serviceWorker.controller, reloaded=false;
+    navigator.serviceWorker.addEventListener('controllerchange',function(){ if(!had||reloaded) return; reloaded=true; save(true); setTimeout(function(){ location.reload(); },150); });
+    navigator.serviceWorker.register('sw.js').then(function(r){ try{ r.update(); }catch(e){} }).catch(function(){});
+  })(); }catch(e){}
 }
 boot();
 })();
