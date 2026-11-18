@@ -1,0 +1,16 @@
+{
+  "name": "Pin Trader",
+  "short_name": "Pin Trader",
+  "description": "A free pin trading app for Cooperstown Dreams Park families.",
+  "start_url": "./pin-trader.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0d1f3c",
+  "theme_color": "#0d1f3c",
+  "icons": [
+    {"src": "pin-icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "pin-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "pin-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}
